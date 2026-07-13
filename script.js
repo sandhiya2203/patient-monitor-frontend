@@ -4,17 +4,21 @@ async function loadPatientData() {
 
         const response = await fetch(
             "https://web-production-ca02a.up.railway.app/patient"
-        )
+        );
+
 
         if (!response.ok) {
             throw new Error("Unable to fetch patient data");
         }
 
+
         const data = await response.json();
+
 
 
         // Update Status
         document.getElementById("status").textContent = data.status;
+
 
 
         // Update Heart Rate
@@ -22,9 +26,11 @@ async function loadPatientData() {
             data.heart_rate ?? 0;
 
 
+
         // Update Blood Pressure
         document.getElementById("bp").textContent =
             data.systolic_bp ?? 0;
+
 
 
         // Update SpO2
@@ -33,43 +39,40 @@ async function loadPatientData() {
 
 
 
-        // Update Time
+        // Update Date and Time
 
         if (data.status === "Connected") {
 
-    const now = new Date();
 
-    document.getElementById("date").textContent =
-        now.toLocaleDateString();
-
-    document.getElementById("time").textContent =
-        now.toLocaleTimeString();
-
-}
-else {
-
-    if (data.last_update) {
-
-        const last = new Date(data.last_update);
-
-        document.getElementById("date").textContent =
-            last.toLocaleDateString();
-
-        document.getElementById("time").textContent =
-            last.toLocaleTimeString();
-
-    }
-    else {
-
-        document.getElementById("date").textContent = "--";
-        document.getElementById("time").textContent = "--";
-
-    }
-
-}
+            const now = new Date();
 
 
-        // Change status color
+            document.getElementById("date").textContent =
+                String(now.getDate()).padStart(2, '0') + "-" +
+                String(now.getMonth() + 1).padStart(2, '0') + "-" +
+                now.getFullYear();
+
+
+
+            document.getElementById("time").textContent =
+                now.toLocaleTimeString('en-GB');
+
+
+        }
+        else {
+
+
+            document.getElementById("date").textContent = "";
+
+            document.getElementById("time").textContent = "";
+
+
+        }
+
+
+
+
+        // Change Status Color
 
         const status = document.getElementById("status");
 
@@ -79,44 +82,64 @@ else {
             status.style.color = "green";
 
         }
+
         else if (data.status === "Searching Provider...") {
 
             status.style.color = "orange";
 
         }
-        else if (data.status === "Provider Not Found" ||
-                 data.status === "Disconnected") {
+
+        else if (
+            data.status === "Provider Not Found" ||
+            data.status === "Disconnected"
+        ) {
 
             status.style.color = "red";
 
         }
+
         else {
 
             status.style.color = "#1565c0";
 
         }
 
+
+
     }
 
 
     catch (error) {
 
+
         console.log(error);
+
 
         document.getElementById("status").textContent =
             "Connection Error";
 
+
         document.getElementById("status").style.color =
             "red";
+
+
+        document.getElementById("date").textContent = "";
+
+        document.getElementById("time").textContent = "";
+
 
     }
 
 }
 
 
+
 // Load immediately
+
 loadPatientData();
 
 
+
 // Refresh every second
+
 setInterval(loadPatientData, 1000);
