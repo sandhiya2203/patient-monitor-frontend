@@ -2,7 +2,9 @@ async function loadPatientData() {
 
     try {
 
-        const response = await fetch("https://web-production-ca02a.up.railway.app/patient")
+        const response = await fetch(
+            "https://web-production-ca02a.up.railway.app/patient"
+        )
 
         if (!response.ok) {
             throw new Error("Unable to fetch patient data");
@@ -10,23 +12,48 @@ async function loadPatientData() {
 
         const data = await response.json();
 
+
         // Update Status
         document.getElementById("status").textContent = data.status;
+
 
         // Update Heart Rate
         document.getElementById("heart").textContent =
             data.heart_rate ?? 0;
 
+
         // Update Blood Pressure
-        document.getElementById("bp").innerHTML =
-            `${data.systolic_bp}`;
+        document.getElementById("bp").textContent =
+            data.systolic_bp ?? 0;
+
 
         // Update SpO2
         document.getElementById("spo2").textContent =
             data.spo2 ?? 0;
 
+
+
+        // Update Time
+
+        if (data.status === "Connected") {
+
+            document.getElementById("time").textContent =
+                new Date().toLocaleTimeString();
+
+        }
+        else {
+
+            document.getElementById("time").textContent =
+                data.last_update ?? "--";
+
+        }
+
+
+
         // Change status color
+
         const status = document.getElementById("status");
+
 
         if (data.status === "Connected") {
 
@@ -38,7 +65,8 @@ async function loadPatientData() {
             status.style.color = "orange";
 
         }
-        else if (data.status === "Provider Not Found") {
+        else if (data.status === "Provider Not Found" ||
+                 data.status === "Disconnected") {
 
             status.style.color = "red";
 
@@ -50,12 +78,17 @@ async function loadPatientData() {
         }
 
     }
+
+
     catch (error) {
 
         console.log(error);
 
-        document.getElementById("status").textContent = "Connection Error";
-        document.getElementById("status").style.color = "red";
+        document.getElementById("status").textContent =
+            "Connection Error";
+
+        document.getElementById("status").style.color =
+            "red";
 
     }
 
@@ -64,6 +97,7 @@ async function loadPatientData() {
 
 // Load immediately
 loadPatientData();
+
 
 // Refresh every second
 setInterval(loadPatientData, 1000);
