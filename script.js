@@ -37,17 +37,36 @@ async function loadPatientData() {
 
         if (data.status === "Connected") {
 
-            document.getElementById("time").textContent =
-                new Date().toLocaleTimeString();
+    const now = new Date();
 
-        }
-        else {
+    document.getElementById("date").textContent =
+        now.toLocaleDateString();
 
-            document.getElementById("time").textContent =
-                data.last_update ?? "--";
+    document.getElementById("time").textContent =
+        now.toLocaleTimeString();
 
-        }
+}
+else {
 
+    if (data.last_update) {
+
+        const last = new Date(data.last_update);
+
+        document.getElementById("date").textContent =
+            last.toLocaleDateString();
+
+        document.getElementById("time").textContent =
+            last.toLocaleTimeString();
+
+    }
+    else {
+
+        document.getElementById("date").textContent = "--";
+        document.getElementById("time").textContent = "--";
+
+    }
+
+}
 
 
         // Change status color
