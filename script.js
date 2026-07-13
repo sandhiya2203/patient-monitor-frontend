@@ -2,7 +2,7 @@ async function loadPatientData() {
 
     try {
 
-        const response = await fetch("https://your-railway-app.up.railway.app/patient")
+        const response = await fetch("https://web-production-ca02a.up.railway.app/")
 
         if (!response.ok) {
             throw new Error("Unable to fetch patient data");
