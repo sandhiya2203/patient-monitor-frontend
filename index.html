@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDC Medical Dashboard</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>Medical Dashboard</h1>
+            <p class="subtitle">IEEE 11073 SDC Based Patient Monitoring System</p>
+        </header>
+
+        <!-- Status -->
+
+        <div class="status-box">
+            <span>Status :</span>
+            <span id="status">Searching Provider...</span>
+        </div>
+
+        <!-- Date & Time -->
+
+        <div class="datetime">
+
+            <div>
+                <strong>Date :</strong>
+                <span id="date"></span>
+            </div>
+
+            <div>
+                <strong>Time :</strong>
+                <span id="time"></span>
+            </div>
+
+        </div>
+
+        <!-- Dashboard Cards -->
+
+        <div class="dashboard">
+
+            <!-- Heart Rate -->
+
+            <div class="card heart-card">
+
+                <h2>Heart Rate</h2>
+
+                <div class="reading">
+                    <span id="heart">0</span>
+                    <small>bpm</small>
+                </div>
+
+            </div>
+
+            <!-- Blood Pressure -->
+
+            <div class="card bp-card">
+
+                <h2>Blood Pressure</h2>
+
+                <div class="reading">
+                    <span id="bp">0/0</span>
+                    <small>mmHg</small>
+                </div>
+
+            </div>
+
+            <!-- SpO₂ -->
+
+            <div class="card spo2-card">
+
+                <h2>SpO₂</h2>
+
+                <div class="reading">
+                    <span id="spo2">0</span>
+                    <small>%</small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+
+        <footer>
+            <p>Live Patient Monitoring Dashboard</p>
+        </footer>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+
+    <script>
+
+        function updateDateTime() {
+
+            const now = new Date();
+
+            document.getElementById("date").textContent =
+                now.toLocaleDateString();
+
+            document.getElementById("time").textContent =
+                now.toLocaleTimeString();
+
+        }
+
+        updateDateTime();
+
+        setInterval(updateDateTime, 1000);
+
+    </script>
+
+</body>
+
+</html>
