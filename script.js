@@ -1,63 +1,89 @@
-async function loadPatientData()
-{
-    try
-    {
+async function loadPatientData() {
+
+    try {
 
         const response = await fetch(
-            "https://cpppatient-monitorbackend-production.up.railway.app/patient?time="
-            + new Date().getTime()
+            "https://web-production-ca02a.up.railway.app/patient"
         );
 
+        if (!response.ok) {
+            throw new Error("Unable to fetch patient data");
+        }
 
         const data = await response.json();
 
-
-        console.log("API DATA:", data);
-
-
-
+        // Update Status
         document.getElementById("status").textContent =
-            data.status;
+            data.status || "Disconnected";
 
-
+        // Update Heart Rate
         document.getElementById("heart").textContent =
-            data.heartRate;
+            data.heart_rate ?? 0;
 
-
+        // Update Blood Pressure
         document.getElementById("bp").textContent =
-            data.bloodPressure;
+            data.systolic_bp ?? 0;
 
-
+        // Update SpO2
         document.getElementById("spo2").textContent =
-            data.spo2;
+            data.spo2 ?? 0;
 
-
-
-        // ONLY backend timestamp
-
+        // Show date and time received from API
         document.getElementById("date").textContent =
-            data.date;
-
+            data.date || "-";
 
         document.getElementById("time").textContent =
-            data.time;
+            data.time || "-";
 
+        // Status Color
+        const status = document.getElementById("status");
+
+        if (data.status === "Connected") {
+
+            status.style.color = "green";
+
+        }
+        else if (data.status === "Searching Provider...") {
+
+            status.style.color = "orange";
+
+        }
+        else if (
+            data.status === "Provider Not Found" ||
+            data.status === "Disconnected"
+        ) {
+
+            status.style.color = "red";
+
+        }
+        else {
+
+            status.style.color = "#1565c0";
+
+        }
 
     }
+    catch (error) {
 
-    catch(error)
-    {
         console.log(error);
+
+        document.getElementById("status").textContent =
+            "Connection Error";
+
+        document.getElementById("status").style.color =
+            "red";
+
+        // Keep previous date and time.
+        // Do NOT clear them here.
+
     }
 
 }
 
 
-
-setInterval(
-    loadPatientData,
-    1000
-);
-
-
+// Load immediately
 loadPatientData();
+
+
+// Refresh every second
+setInterval(loadPatientData, 1000);
